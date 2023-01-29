@@ -7,13 +7,13 @@ import typer
 
 
 def text2jsonl(
+    # fmt: off
     txt_path: Path = typer.Argument(..., help="A .txt file"),
-    out_path: Path = typer.Option(
-        None, help="Output file. Will print if not provided."
-    ),
+    out_path: Path = typer.Option(None, help="Output file. Will print if not provided."),
     n: int = typer.Option(None, help="Only consider top `n` texts."),
+    # fmt: on
 ):
-    """This prints your name"""
+    """Turns a text file into a jsonl file for you."""
 
     with open(txt_path, "r") as f:
         lines = f.readlines()
