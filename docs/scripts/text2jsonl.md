@@ -15,8 +15,8 @@ Turns a text file into a jsonl file for you.
 ## Implementation
 
 ```python 
-import json
 import itertools as it
+import json
 from pathlib import Path
 
 import srsly

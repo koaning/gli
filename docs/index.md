@@ -8,6 +8,12 @@ So I made this repo.
 
 I am hoping it will spark glee on the command-line.
 
+### Where can I visit it? 
+
+The mkdocs page can be found on [https://koaning.github.io/gli/](https://koaning.github.io/gli/).
+
+From there you can search through the scripts.
+
 ### What's in here? 
 
 Most of these scripts are meant to be used together with [spaCy](https://spacy.io) 

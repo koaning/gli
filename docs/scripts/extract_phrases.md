@@ -1,6 +1,6 @@
 # extract_phrases 
 
-None
+Turns a `.jsonl` with text into a `.jsonl` with extracted phrases.
 
 ## **Arguments**
 
@@ -8,7 +8,7 @@ None
 
 ## **Options**
 
-* `--hide-det` **int**: Only consider top `n` texts.
+* `--keep-det` **int**: Only consider top `n` texts.
 * `--n` **int**: Only consider top `n` texts.
 * `--model` **str**: A spaCy model to load.
 * `--help`: Show this message and exit.
@@ -19,20 +19,19 @@ None
 import itertools as it
 import json
 from pathlib import Path
-from typing import Any, Generator
 
 import spacy
 import srsly
 import typer
 
 
-def fetch_phrases(stream, nlp, hide_det=False):
+def _fetch_phrases(stream, nlp, keep_det=False):
     for doc in nlp.pipe(stream):
         for chunk in doc.noun_chunks:
-            if hide_det:
-                yield {"text": " ".join([t for t in chunk if t.pos_ != "DET"])}
-            else:
+            if keep_det:
                 yield {"text": chunk.text}
+            else:
+                yield {"text": " ".join([t for t in chunk if t.pos_ != "DET"])}
 
 
 def extract_phrases(
@@ -41,14 +40,15 @@ def extract_phrases(
     file_out: Path = typer.Argument(..., help="Output file for phrases. Will print if not provided."),
     model: str = typer.Option(..., help="A spaCy model to load."),
     n: int = typer.Option(None, help="Only consider top `n` texts."),
-    hide_det: int = typer.Option(False, help="Only consider top `n` texts.", is_flag=True),
+    keep_det: int = typer.Option(False, help="Only consider top `n` texts.", is_flag=True),
     # fmt: on
 ):
+    """Turns a `.jsonl` with text into a `.jsonl` with extracted phrases."""
     stream = (ex["text"] for ex in srsly.read_jsonl(file_in))
     if n:
         stream = it.islice(stream, n)
     nlp = spacy.load(model, disable=["ents"])
-    stream = fetch_phrases(stream, nlp, hide_det=hide_det)
+    stream = _fetch_phrases(stream, nlp, keep_det=keep_det)
     if file_out:
         srsly.write_jsonl(file_out, stream)
     else:

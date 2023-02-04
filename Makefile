@@ -1,3 +1,5 @@
+.PHONY: docs
+
 install:
 	python -m pip install --upgrade -r dev-requirements.txt
 
@@ -9,3 +11,7 @@ clean:
 check:
 	interrogate --ignore-semiprivate --ignore-private --ignore-module -vv
 	flake8 gli
+
+docs:
+	python gli/docstuff.py
+	mkdocs serve

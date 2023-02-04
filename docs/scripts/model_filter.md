@@ -26,14 +26,14 @@ import srsly
 import typer
 
 
-def filter_categories(docs, cats, threshold):
+def _filter_categories(docs, cats, threshold):
     for doc, context in docs:
         found_all = all([doc.cats[c] > threshold for c in cats])
         if found_all:
             yield doc, context
 
 
-def filter_entities(docs, ents):
+def _filter_entities(docs, ents):
     for doc, context in docs:
         found_ents = [_.label_ for _ in doc.ents]
         found_all = all([ent in found_ents for ent in ents])
@@ -60,9 +60,9 @@ def model_filter(
         for doc, context in nlp.pipe(srsly.read_jsonl(file_in), as_tuples=True)
     )
     if cat:
-        stream = filter_categories(stream, cats=cat.split(","), threshold=threshold)
+        stream = _filter_categories(stream, cats=cat.split(","), threshold=threshold)
     if ent:
-        stream = filter_entities(stream, cats=cat.split(","), threshold=threshold)
+        stream = _filter_entities(stream, cats=cat.split(","), threshold=threshold)
     stream = (context for doc, context in stream)
     if file_out:
         srsly.write_jsonl(file_out, stream)
@@ -72,5 +72,5 @@ def model_filter(
 
 
 if __name__ == "__main__":
-    typer.run(content_filter)
+    typer.run(model_filter)
 ```

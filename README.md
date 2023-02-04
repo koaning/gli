@@ -1,19 +1,29 @@
-# `text2jsonl`
+# GLI
 
-Turns a text file into a jsonl file for you.
+### Why is this called `gli`? 
 
-**Usage**:
+I have _so_ many scripts and I wanted to start re-using them. 
 
-```console
-$ text2jsonl [OPTIONS] TXT_PATH
-```
+So I made this repo. 
 
-**Arguments**:
+I am hoping it will spark glee on the command-line.
 
-* `TXT_PATH`: A .txt file  [required]
+### Where can I visit it? 
 
-**Options**:
+The mkdocs page can be found on [https://koaning.github.io/gli/](https://koaning.github.io/gli/).
 
-* `--out-path PATH`: Output file. Will print if not provided.
-* `--n INTEGER`: Only consider top `n` texts.
-* `--help`: Show this message and exit.
+From there you can search through the scripts.
+
+### What's in here? 
+
+Most of these scripts are meant to be used together with [spaCy](https://spacy.io) 
+and [Prodi.gy](https://prodi.gy). But there may be some general utils in here as well. 
+
+### Can I copy stuff? 
+
+Sure, go for it.
+
+### Can I contribute? 
+
+You're open to suggest a command line util to host here, but
+my main intention is to keep this repo as a personal utility.
