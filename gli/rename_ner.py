@@ -5,7 +5,7 @@ import srsly
 import typer
 
 
-def replace_ents(item, table):
+def _replace_ents(item, table):
     for span in item["spans"]:
         for k, v in table.items():
             if span["label"] == k:
@@ -23,7 +23,7 @@ def rename_ner(
     """Rename a named entity label in a Prodigy .jsonl file"""
     pairs = [kv for kv in translate.split(",")]
     ent_table = dict([kv.split(":") for kv in pairs])
-    stream = (replace_ents(ex, ent_table) for ex in srsly.read_jsonl(file_in))
+    stream = (_replace_ents(ex, ent_table) for ex in srsly.read_jsonl(file_in))
     if file_out:
         srsly.write_jsonl(file_out, stream)
     else:
@@ -32,4 +32,4 @@ def rename_ner(
 
 
 if __name__ == "__main__":
-    typer.run(content_filter)
+    typer.run(rename_ner)

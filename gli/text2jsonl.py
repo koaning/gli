@@ -1,5 +1,5 @@
-import json
 import itertools as it
+import json
 from pathlib import Path
 
 import srsly

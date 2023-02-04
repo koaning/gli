@@ -1,12 +1,14 @@
-from pathlib import Path
 import inspect
+from pathlib import Path
 
-from text2jsonl import text2jsonl
 from extract_phrases import extract_phrases
-from rename_ner import rename_ner
 from model_filter import model_filter
+from rename_ner import rename_ner
+from text2jsonl import text2jsonl
+
 
 def generate_docs(func):
+    """Can generate a doc file from a func."""
     out = f"# {func.__name__} \n\n{func.__doc__}\n"
     arguments = []
     options = [{"name": "help", "type": "", "help": "Show this message and exit."}]
@@ -30,16 +32,15 @@ def generate_docs(func):
         out += "\n## **Options**\n\n"
         for opt in reversed(options):
             name = f"`--{opt['name'].replace('_', '-')}`"
-            if opt['type'].upper():
+            if opt["type"].upper():
                 name += f" **{opt['type']}**"
             out += f"* {name.strip()}: {opt['help']}\n"
-    
     out += "\n## Implementation\n\n"
     pypath = Path("gli") / f"{func.__name__}.py"
     out += "```python \n"
     out += pypath.read_text()
     out += "```"
-    out_file = Path("docs") / "scripts"/ f"{func.__name__}.md"
+    out_file = Path("docs") / "scripts" / f"{func.__name__}.md"
     out_file.write_text(out)
 
 

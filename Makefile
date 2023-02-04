@@ -5,3 +5,7 @@ clean:
 	isort gli
 	black gli
 	rm -rf gli/**/__pycache__
+
+check:
+	interrogate --ignore-semiprivate --ignore-private --ignore-module -vv
+	flake8 gli

@@ -5,3 +5,4 @@ srsly
 typer
 spacy
 mkdocs-material
+interrogate
