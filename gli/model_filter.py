@@ -1,4 +1,4 @@
-import json 
+import json
 from pathlib import Path
 
 import spacy
@@ -12,12 +12,14 @@ def filter_categories(docs, cats, threshold):
         if found_all:
             yield doc, context
 
+
 def filter_entities(docs, ents):
     for doc, context in docs:
         found_ents = [_.label_ for _ in doc.ents]
         found_all = all([ent in found_ents for ent in ents])
         if found_all:
             yield doc, context
+
 
 def content_filter(
     # fmt: off
@@ -30,11 +32,14 @@ def content_filter(
     # fmt: on
 ):
     """
-    Filter a .jsonl file to only return content where a spaCy 
+    Filter a .jsonl file to only return content where a spaCy
     model is able to detect something of interest.
     """
     nlp = spacy.load(spacy_model)
-    stream = ((doc, context) for doc, context in nlp.pipe(srsly.read_jsonl(file_in), as_tuples=True))
+    stream = (
+        (doc, context)
+        for doc, context in nlp.pipe(srsly.read_jsonl(file_in), as_tuples=True)
+    )
     if cat:
         stream = filter_categories(stream, cats=cat.split(","), threshold=threshold)
     if ent:
@@ -45,7 +50,6 @@ def content_filter(
     else:
         for item in stream:
             print(json.dumps(item))
-    
 
 
 if __name__ == "__main__":

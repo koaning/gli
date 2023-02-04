@@ -6,7 +6,7 @@ import srsly
 import typer
 
 
-def text2jsonl(
+def main(
     # fmt: off
     txt_path: Path = typer.Argument(..., help="A .txt file"),
     out_path: Path = typer.Option(None, help="Output file. Will print if not provided."),
@@ -29,4 +29,4 @@ def text2jsonl(
 
 
 if __name__ == "__main__":
-    typer.run(text2jsonl)
+    typer.run(main)

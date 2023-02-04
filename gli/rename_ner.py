@@ -1,4 +1,4 @@
-import json 
+import json
 from pathlib import Path
 
 import srsly
@@ -6,12 +6,12 @@ import typer
 
 
 def replace_ents(item, table):
-    for span in item['spans']:
+    for span in item["spans"]:
         for k, v in table.items():
-            if span['label'] == k:
-                span['label'] = v
-    print(item['spans'])
-    return item 
+            if span["label"] == k:
+                span["label"] = v
+    return item
+
 
 def content_filter(
     # fmt: off
@@ -21,7 +21,7 @@ def content_filter(
     # fmt: on
 ):
     """
-    Filter a .jsonl file to only return content where a spaCy 
+    Filter a .jsonl file to only return content where a spaCy
     model is able to detect something of interest.
     """
     pairs = [kv for kv in translate.split(",")]
@@ -32,9 +32,6 @@ def content_filter(
     else:
         for item in stream:
             print(json.dumps(item))
-    
-    
-    
 
 
 if __name__ == "__main__":
