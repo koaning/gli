@@ -16,7 +16,7 @@ docs:
 	python gli/docstuff.py
 	mkdocs serve
 
-commit:
+commit: clean
 	python gli/docstuff.py
 	git add . 
 	git commit -m "made another improvement"
