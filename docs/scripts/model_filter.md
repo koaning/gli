@@ -1,3 +1,23 @@
+# model_filter 
+
+Filter a .jsonl file to only return content where a spaCy
+    model is able to detect something of interest.
+    
+
+
+## **Options**
+
+* `--ent` **str**: Path to write text into
+* `--threshold` **float**: threshold
+* `--cat` **str**: Path to write text into
+* `--spacy-model` **Path**: Path to write text into
+* `--file-out` **Path**: Path to write text into
+* `--file-in` **Path**: Path to write text into
+* `--help`: Show this message and exit.
+
+## Implementation
+
+```python 
 import json
 from pathlib import Path
 
@@ -53,3 +73,4 @@ def model_filter(
 
 if __name__ == "__main__":
     typer.run(content_filter)
+```

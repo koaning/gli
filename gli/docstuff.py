@@ -1,13 +1,16 @@
+from pathlib import Path
 import inspect
 
-from text2jsonl import main as text2jsonl
-
+from text2jsonl import text2jsonl
+from extract_phrases import extract_phrases
+from rename_ner import rename_ner
+from model_filter import model_filter
 
 def generate_docs(func):
-    out = f"\n\n{func.__doc__}\n"
+    out = f"# {func.__name__} \n\n{func.__doc__}\n"
     arguments = []
     options = [{"name": "help", "type": "", "help": "Show this message and exit."}]
-    for k, v in inspect.signature(text2jsonl).parameters.items():
+    for k, v in inspect.signature(func).parameters.items():
         item = {
             "name": k,
             "type": v.annotation.__name__,
@@ -19,17 +22,28 @@ def generate_docs(func):
             arguments.append(item)
     out += "\n"
     if arguments:
-        out += "\n**Arguments**\n\n"
+        out += "## **Arguments**\n\n"
         for arg in arguments:
             out += f"* `{arg['name'].replace('_', '-')} {arg['type'].upper()}`: {arg['help']}"
         out += "\n"
     if options:
-        out += "\n**Arguments**\n\n"
+        out += "\n## **Options**\n\n"
         for opt in reversed(options):
-            name = f"--{opt['name'].replace('_', '-')} {opt['type'].upper()}"
-            out += f"* `{name.strip()}`: {opt['help']}\n"
-    print(out)
+            name = f"`--{opt['name'].replace('_', '-')}`"
+            if opt['type'].upper():
+                name += f" **{opt['type']}**"
+            out += f"* {name.strip()}: {opt['help']}\n"
+    
+    out += "\n## Implementation\n\n"
+    pypath = Path("gli") / f"{func.__name__}.py"
+    out += "```python \n"
+    out += pypath.read_text()
+    out += "```"
+    out_file = Path("docs") / "scripts"/ f"{func.__name__}.md"
+    out_file.write_text(out)
 
 
 if __name__ == "__main__":
-    generate_docs(text2jsonl)
+    funcs = [extract_phrases, text2jsonl, rename_ner, model_filter]
+    for func in funcs:
+        generate_docs(func)

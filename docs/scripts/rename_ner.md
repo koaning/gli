@@ -1,3 +1,18 @@
+# rename_ner 
+
+Rename a named entity label in a Prodigy .jsonl file
+
+
+## **Options**
+
+* `--translate` **str**: Path to write text into
+* `--file-out` **Path**: Path to write text into
+* `--file-in` **Path**: Path to write text into
+* `--help`: Show this message and exit.
+
+## Implementation
+
+```python 
 import json
 from pathlib import Path
 
@@ -33,3 +48,4 @@ def rename_ner(
 
 if __name__ == "__main__":
     typer.run(content_filter)
+```

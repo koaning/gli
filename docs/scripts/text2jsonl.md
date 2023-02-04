@@ -1,3 +1,20 @@
+# text2jsonl 
+
+Turns a text file into a jsonl file for you.
+
+## **Arguments**
+
+* `txt-path PATH`: A .txt file
+
+## **Options**
+
+* `--n` **int**: Only consider top `n` texts.
+* `--out-path` **Path**: Output file. Will print if not provided.
+* `--help`: Show this message and exit.
+
+## Implementation
+
+```python 
 import json
 import itertools as it
 from pathlib import Path
@@ -30,3 +47,4 @@ def text2jsonl(
 
 if __name__ == "__main__":
     typer.run(text2jsonl)
+```

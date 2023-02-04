@@ -1,7 +1,7 @@
 isort
-black==20.8b1
+black
 pytest
 srsly
 typer
-typer-cli
-click==7.1.2
+spacy
+mkdocs-material
