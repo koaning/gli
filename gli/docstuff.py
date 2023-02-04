@@ -1,6 +1,7 @@
 import inspect
 from pathlib import Path
 
+from dropkey import dropkey
 from extract_phrases import extract_phrases
 from model_filter import model_filter
 from rename_ner import rename_ner
@@ -45,6 +46,6 @@ def generate_docs(func):
 
 
 if __name__ == "__main__":
-    funcs = [extract_phrases, text2jsonl, rename_ner, model_filter]
+    funcs = [extract_phrases, text2jsonl, rename_ner, model_filter, dropkey]
     for func in funcs:
         generate_docs(func)

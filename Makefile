@@ -15,3 +15,9 @@ check:
 docs:
 	python gli/docstuff.py
 	mkdocs serve
+
+commit:
+	python gli/docstuff.py
+	git add . 
+	git commit -m "made another improvement"
+	git push origin main
