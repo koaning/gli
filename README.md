@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/koaning/embetter/main/icon.png" width="125" height="125" align="right" />
+
 # GLI
 
 ### Why is this called `gli`? 
