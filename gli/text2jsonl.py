@@ -5,14 +5,20 @@ from pathlib import Path
 import srsly
 import typer
 
+# cli.py
+from radicli import Radicli, Arg
 
-def text2jsonl(
+cli = Radicli()
+
+@cli.command(
+    "text2jsonl",
     # fmt: off
-    txt_path: Path = typer.Argument(..., help="A .txt file"),
-    out_path: Path = typer.Option(None, help="Output file. Will print if not provided."),
-    n: int = typer.Option(None, help="Only consider top `n` texts."),
+    txt_path=Arg(help="Path to .txt file"),
+    out_path=Arg("--out-path", help="Output file. Will print if not provided."),
+    n=Arg("--n", help="Number of lines to use"),
     # fmt: on
-):
+)
+def text2jsonl(txt_path: Path, out_path: Path = None, n: int=None):
     """Turns a text file into a jsonl file for you."""
 
     with open(txt_path, "r") as f:
@@ -29,4 +35,4 @@ def text2jsonl(
 
 
 if __name__ == "__main__":
-    typer.run(text2jsonl)
+    cli.run()

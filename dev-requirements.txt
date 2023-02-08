@@ -2,7 +2,7 @@ isort
 black
 pytest
 srsly
-typer
+radicli
 spacy
 mkdocs-material
 interrogate

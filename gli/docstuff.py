@@ -1,51 +1,69 @@
-import inspect
+import itertools as it
+import json
 from pathlib import Path
 
-from dropkey import dropkey
-from extract_phrases import extract_phrases
-from model_filter import model_filter
-from rename_ner import rename_ner
-from text2jsonl import text2jsonl
+import srsly
+import typer
+
+from radicli import Radicli, Arg
+
+cli = Radicli()
+
+@cli.command(
+    "text2jsonl",
+    # fmt: off
+    txt_path=Arg(help="Path to .txt file"),
+    out_path=Arg("--out-path", help="Output file. Will print if not provided."),
+    n=Arg("--n", help="Number of lines to use"),
+    # fmt: on
+)
+def text2jsonl(txt_path: Path, out_path: Path = None, n: int=None):
+    """Turns a text file into a jsonl file for you."""
+
+    with open(txt_path, "r") as f:
+        lines = f.readlines()
+
+    g = ({"text": text.replace("\n", "")} for text in lines)
+    if n:
+        g = it.islice(g, n)
+    if out_path:
+        srsly.write_jsonl(out_path, g)
+    else:
+        for ex in g:
+            print(json.dumps(ex))
 
 
-def generate_docs(func):
-    """Can generate a doc file from a func."""
-    out = f"# {func.__name__} \n\n{func.__doc__}\n"
-    arguments = []
-    options = [{"name": "help", "type": "", "help": "Show this message and exit."}]
-    for k, v in inspect.signature(func).parameters.items():
-        item = {
-            "name": k,
-            "type": v.annotation.__name__,
-            "help": v.default.help,
-        }
-        if "Option" in v.default.__class__.__name__:
-            options.append(item)
-        else:
-            arguments.append(item)
-    out += "\n"
-    if arguments:
-        out += "## **Arguments**\n\n"
-        for arg in arguments:
-            out += f"* `{arg['name'].replace('_', '-')} {arg['type'].upper()}`: {arg['help']}"
-        out += "\n"
-    if options:
-        out += "\n## **Options**\n\n"
-        for opt in reversed(options):
-            name = f"`--{opt['name'].replace('_', '-')}`"
-            if opt["type"].upper():
-                name += f" **{opt['type']}**"
-            out += f"* {name.strip()}: {opt['help']}\n"
-    out += "\n## Implementation\n\n"
-    pypath = Path("gli") / f"{func.__name__}.py"
-    out += "```python \n"
-    out += pypath.read_text()
-    out += "```"
-    out_file = Path("docs") / "scripts" / f"{func.__name__}.md"
-    out_file.write_text(out)
+def mkline(arg):
+    if arg['option']:
+        return f"* `--{arg['name']}`: {arg['help']}\n"    
+    return f"* `{arg['name']}`: {arg['help']}\n"
 
+def parse_command(cmd):
+    msg = f"\n## {cmd.name}\n\n"
+    msg += f"{cmd.func.__doc__}\n"
+    parsed_args = []
+    for arg in cmd.args:
+        parsed_args.append({
+            "name": arg.id,
+            "type": arg.type.__name__,
+            "help": arg.arg.help,
+            "option": arg.arg.option,
+            "short": arg.arg.short,
+            "default": arg.arg.short,
+        })
+    if any([not a['option'] for a in parsed_args]):
+        msg += "\n**Arguments**\n\n"
+        for arg in parsed_args:
+            if not arg['option']:
+                msg += mkline(arg)
+    if any([a['option'] for a in parsed_args]):
+        msg += "\n**Options**\n\n"
+        for arg in parsed_args:
+            if arg['option']:
+                msg += mkline(arg)
+        # msg += f"* `{arg['id}` **{arg.type.__name__}**: {arg.arg.help}\n"
+    print(msg)
 
-if __name__ == "__main__":
-    funcs = [extract_phrases, text2jsonl, rename_ner, model_filter, dropkey]
-    for func in funcs:
-        generate_docs(func)
+cmd = cli.commands['text2jsonl']
+
+parse_command(cmd)
