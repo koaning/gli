@@ -1,0 +1,12 @@
+{"text":"site_name: gli"}
+{"text":"theme:"}
+{"text":"  name: material"}
+{"text":"  palette:"}
+{"text":"    primary: black"}
+{"text":"    accent: teal"}
+{"text":"  features:"}
+{"text":"    - content.code.copy"}
+{"text":"markdown_extensions:"}
+{"text":"  - pymdownx.highlight:"}
+{"text":"      anchor_linenums: true"}
+{"text":"  - pymdownx.superfences "}
