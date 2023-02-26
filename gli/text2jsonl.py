@@ -10,6 +10,7 @@ from radicli import Radicli, Arg
 
 cli = Radicli()
 
+
 @cli.command(
     "text2jsonl",
     # fmt: off
@@ -18,7 +19,7 @@ cli = Radicli()
     n=Arg("--n", help="Number of lines to use"),
     # fmt: on
 )
-def text2jsonl(txt_path: Path, out_path: Path = None, n: int=None):
+def text2jsonl(txt_path: Path, out_path: Path = None, n: int = None):
     """Turns a text file into a jsonl file for you."""
 
     with open(txt_path, "r") as f:

@@ -6,37 +6,48 @@ import spacy
 import srsly
 import typer
 
+from radicli import Radicli, Arg
+
+cli = Radicli()
 
 def _fetch_phrases(stream, nlp, keep_det=False):
     for doc in nlp.pipe(stream):
         for chunk in doc.noun_chunks:
             if keep_det:
-                yield {"text": chunk.text}
+                yield chunk.text
             else:
-                yield {"text": " ".join([t for t in chunk if t.pos_ != "DET"])}
+                yield " ".join([t.text for t in chunk if t.pos_ != "DET"])
 
-
-def extract_phrases(
+@cli.command(
     # fmt: off
-    file_in: Path = typer.Argument(..., help="A .json file with texts"),
-    file_out: Path = typer.Argument(..., help="Output file for phrases. Will print if not provided."),
-    model: str = typer.Option(..., help="A spaCy model to load."),
-    n: int = typer.Option(None, help="Only consider top `n` texts."),
-    keep_det: int = typer.Option(False, help="Only consider top `n` texts.", is_flag=True),
+    "extract-phrases",
+    file_in=Arg(help="A .jsonl file with texts"),
+    output=Arg("--output", help="Output .jsonl with phrases. Will print if not provided"),
+    model=Arg("--model", help="spaCy model to use"),
+    n=Arg("--n","-n", help="Only consider top `n` texts."),
+    keep_det=Arg("--keep-det", help="Keep determinant in phrase.")
     # fmt: on
+)
+def extract_phrases(
+    file_in: Path,
+    model: str,
+    n: int,
+    keep_det: int,
+    output: Path = None,
 ):
     """Turns a `.jsonl` with text into a `.jsonl` with extracted phrases."""
     stream = (ex["text"] for ex in srsly.read_jsonl(file_in))
     if n:
         stream = it.islice(stream, n)
     nlp = spacy.load(model, disable=["ents"])
-    stream = _fetch_phrases(stream, nlp, keep_det=keep_det)
-    if file_out:
-        srsly.write_jsonl(file_out, stream)
+    stream = set(_fetch_phrases(stream, nlp, keep_det=keep_det))
+    stream = ({'text': txt} for txt in stream)
+    if output:
+        srsly.write_jsonl(output, stream)
     else:
         for ex in stream:
             print(json.dumps(ex))
 
 
 if __name__ == "__main__":
-    typer.run(extract_phrases)
+    cli.run()
