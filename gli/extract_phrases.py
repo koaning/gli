@@ -4,11 +4,11 @@ from pathlib import Path
 
 import spacy
 import srsly
-import typer
 
 from radicli import Radicli, Arg
 
 cli = Radicli()
+
 
 def _fetch_phrases(stream, nlp, keep_det=False):
     for doc in nlp.pipe(stream):
@@ -17,6 +17,7 @@ def _fetch_phrases(stream, nlp, keep_det=False):
                 yield chunk.text
             else:
                 yield " ".join([t.text for t in chunk if t.pos_ != "DET"])
+
 
 @cli.command(
     # fmt: off
@@ -41,7 +42,7 @@ def extract_phrases(
         stream = it.islice(stream, n)
     nlp = spacy.load(model, disable=["ents"])
     stream = set(_fetch_phrases(stream, nlp, keep_det=keep_det))
-    stream = ({'text': txt} for txt in stream)
+    stream = ({"text": txt} for txt in stream)
     if output:
         srsly.write_jsonl(output, stream)
     else:

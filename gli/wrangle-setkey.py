@@ -10,6 +10,7 @@ from radicli import Radicli, Arg
 
 cli = Radicli()
 
+
 @cli.command(
     "wrangle.setkey",
     # fmt: off
@@ -18,19 +19,19 @@ cli = Radicli()
     keys=Arg("--keys", help="Key to override, like 'foo:bar,buz:bla'"),
     # fmt: on
 )
-def wrangle_setkey(input_path: Path, out_path: Path = None, keys: str=None):
+def wrangle_setkey(input_path: Path, out_path: Path = None, keys: str = None):
     """Turns a text file into a jsonl file for you."""
     stream = srsly.read_jsonl(input_path)
     translator = {}
     for pair in keys.split(","):
         k, v = pair.split(":")
         translator[k] = v
-    
+
     def replace_keys(item):
-        for k,v in translator.items():
+        for k, v in translator.items():
             item[k] = v
         return item
-    
+
     g = (replace_keys(ex) for ex in stream)
 
     if out_path:

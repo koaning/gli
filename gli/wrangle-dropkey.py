@@ -8,6 +8,7 @@ from radicli import Radicli, Arg
 
 cli = Radicli()
 
+
 @cli.command(
     "wrangle.setkey",
     # fmt: off
@@ -16,7 +17,7 @@ cli = Radicli()
     keys=Arg("--keys", help="Key to override, like 'foo,bar,buz'"),
     # fmt: on
 )
-def wrangle_dropkey(input_path: Path, out_path: Path = None, keys: str=None):
+def wrangle_dropkey(input_path: Path, out_path: Path = None, keys: str = None):
     """Turns a text file into a jsonl file for you."""
     stream = srsly.read_jsonl(input_path)
     to_delete = keys.split(",")
@@ -25,7 +26,7 @@ def wrangle_dropkey(input_path: Path, out_path: Path = None, keys: str=None):
         for k in to_delete:
             del item[k]
         return item
-    
+
     g = (remove_keys(ex) for ex in stream)
 
     if out_path:
